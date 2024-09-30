@@ -1,62 +1,57 @@
 import {
-  Body,
   Controller,
   Get,
-  Param,
-  ParseIntPipe,
-  Patch,
   Post,
+  Body,
+  Patch,
+  Param,
+  Delete,
+  ParseIntPipe,
   Put,
-  Query,
 } from '@nestjs/common';
 import { UsersService } from './users.service';
-import { UserSignUpDto } from './dto/user-sign-up.dto';
+import { CreateUserInputDto } from './dto/create-user-input.dto';
+import { UpdateUserInputDto } from './dto/update-user-input.dto';
+import { UpdateUserPartialInputDto } from './dto/update-user-partial-input.dto';
 import { IUser } from './interfaces/user.interface';
 
 @Controller('users')
-export class UserController {
-  constructor(private readonly userService: UsersService) {}
-
-  @Get('list')
-  listUsers(): IUser[] {
-    return [
-      {
-        age: 10,
-        name: 'John',
-        dog: true,
-      },
-      {
-        age: 11,
-        name: 'Smith',
-        dog: true,
-      },
-    ];
-  }
+export class UsersController {
+  constructor(private readonly usersService: UsersService) {}
 
   @Get(':id')
-  getUser(@Param('id', ParseIntPipe) id: number): any {}
+  getUser(@Param('id', ParseIntPipe) id: number): IUser {
+    return this.usersService.findOneById(id);
+  }
 
-  //GET 'localhost:3000/users?id=1
-  // hint for dto is in query
   @Get()
-  listUsersWithPe(@Query() query: { id: string }): any {
-    return query;
+  listUsers(): IUser[] {
+    return this.usersService.list();
   }
 
   @Post()
-  signUp(@Body() dto: UserSignUpDto): string {
-    return this.userService.signUp(dto);
+  createUser(@Body() dto: CreateUserInputDto): IUser {
+    return this.usersService.create(dto);
   }
 
-  @Patch()
-  updateUserPartially(@Body() body: any): any {}
+  @Patch(':id')
+  updateUserPartially(
+    @Param('id', ParseIntPipe) id: number,
+    @Body() updateUserDto: UpdateUserPartialInputDto,
+  ): IUser {
+    return this.usersService.updatePartially(id, updateUserDto);
+  }
 
-  @Put()
-  updateUser(@Body() body: any): any {}
+  @Put(':id')
+  updateUser(
+    @Param('id', ParseIntPipe) id: number,
+    @Body() updateUserDto: UpdateUserInputDto,
+  ): IUser {
+    return this.usersService.update(id, updateUserDto);
+  }
+
+  @Delete(':id')
+  deleteUser(@Param('id', ParseIntPipe) id: number): string {
+    return this.usersService.remove(id);
+  }
 }
-
-// 'localhost:3000/users'
-
-// CRUD - Create Read Update Delete
-
-// POST GET PUT PATCH DELETE
