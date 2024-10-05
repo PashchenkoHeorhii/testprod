@@ -23,5 +23,10 @@
     "outDir": "./dist",
     "baseUrl": "./",
     "resolveJsonModule": true,
+    "paths": {
+      "@mongo-models/*": ["src/database/database-factory/mongodb/models/*"],
+      "@database-factory/*": ["src/database/database-factory/*"],
+      "@utils/*": ["src/utils/*"]
+    }
   }
 }

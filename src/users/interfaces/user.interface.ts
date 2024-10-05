@@ -1,10 +1,10 @@
 export interface IUser {
-  id: number;
+  id: number | string;
   firstName: string;
   lastName: string;
   age: number;
   isStudent: boolean;
-  password: string;
+  password?: string;
   accessToken?: string;
   refreshToken?: string;
 }
